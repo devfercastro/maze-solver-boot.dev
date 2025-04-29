@@ -1,10 +1,19 @@
+from shapes import Line
 from window import Window
+
+# windows dimentions
+WIDTH, HEIGHT = 800, 600
 
 
 def main():
     # create a window
-    win = Window(800, 600)
-    # and wait for it to close
+    win = Window(WIDTH, HEIGHT)
+
+    # draw a black line
+    line = Line()
+    win.draw_line(line, "black")
+
+    # wait for the window to close
     win.wait_for_close()
 
 
