@@ -2,8 +2,6 @@ from tkinter import Canvas, Tk
 
 from typing_extensions import Literal
 
-from shapes import Line
-
 
 class Window:
     # Windows class's constructor
@@ -50,7 +48,7 @@ class Window:
         """
         self.__running = False
 
-    def draw_line(self, line: Line, fill_color: Literal["black", "red"]):
+    def draw_line(self, line, fill_color: Literal["black", "red"]):
         """
         It takes an instance of `Line` and a color as inputs, then calls the `Line`s `draw()` method.
         """
