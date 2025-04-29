@@ -75,3 +75,28 @@ class Cell:
             if self.walls[i]:
                 current_line = Line(*points)
                 self._win.draw_line(current_line, "black")
+
+    def draw_move(self, to_cell: "Cell", undo=False):
+        # If the `undo` falg is not set, the line you draw should be `"red"`. Otherwise, make it `"gray"`. This is so that when we go to draw the path, whenever we backtrack we can show that in a different color to better visualize what's happening.
+        color: Literal["black", "red"] = "black" if undo else "red"
+
+        # Use the x/y coordinates of the 2 cells in question to decide how to draw the line connecting the two cells.
+        top_left, bottom_right = self.coordinates
+        top_left_other, bottom_right_other = to_cell.coordinates
+
+        width, height = (
+            bottom_right.x - top_left.x,
+            bottom_right.y - top_left.y,
+        )
+
+        width_other, height_other = (
+            bottom_right_other.x - top_left_other.x,
+            bottom_right_other.y - top_left_other.y,
+        )
+
+        start_point = Point(top_left.x + width // 2, top_left.y + height // 2)
+        end_point = Point(
+            top_left_other.x + width_other // 2, top_left_other.y + height_other // 2
+        )
+
+        self._win.draw_line(Line(start_point, end_point), color)
