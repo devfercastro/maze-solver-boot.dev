@@ -77,26 +77,40 @@ class Cell:
                 self._win.draw_line(current_line, "black")
 
     def draw_move(self, to_cell: "Cell", undo=False):
+        """
+        Draws a line that connects the current `Cell` instance with another.
+
+        Args:
+            to_cell: The other `Cell` instance.
+            undo: Flag that changes the color of line to red if false and to black if true
+        """
         # If the `undo` falg is not set, the line you draw should be `"red"`. Otherwise, make it `"gray"`. This is so that when we go to draw the path, whenever we backtrack we can show that in a different color to better visualize what's happening.
         color: Literal["black", "red"] = "black" if undo else "red"
 
         # Use the x/y coordinates of the 2 cells in question to decide how to draw the line connecting the two cells.
-        top_left, bottom_right = self.coordinates
-        top_left_other, bottom_right_other = to_cell.coordinates
-
-        width, height = (
-            bottom_right.x - top_left.x,
-            bottom_right.y - top_left.y,
-        )
-
-        width_other, height_other = (
-            bottom_right_other.x - top_left_other.x,
-            bottom_right_other.y - top_left_other.y,
-        )
-
-        start_point = Point(top_left.x + width // 2, top_left.y + height // 2)
-        end_point = Point(
-            top_left_other.x + width_other // 2, top_left_other.y + height_other // 2
-        )
+        start_point = self.__calculate_center()
+        end_point = to_cell.__calculate_center()
 
         self._win.draw_line(Line(start_point, end_point), color)
+
+    def __calculate_center(self):
+        """
+        Calculates the center of a cell.
+
+        Returns:
+            A `Point` intance with the x/y pointing to the center of the cell
+        """
+        top_left_corner, bottom_right_corner = (
+            self.coordinates
+        )  # Get cell's coordinates
+
+        # Calculate cell's width and height
+        width, height = (
+            bottom_right_corner.x - top_left_corner.x,
+            bottom_right_corner.y - top_left_corner.y,
+        )
+
+        # Calculate the center point
+        center = Point(top_left_corner.x + width // 2, top_left_corner.y + height // 2)
+
+        return center
