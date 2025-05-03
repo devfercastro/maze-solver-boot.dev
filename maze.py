@@ -14,6 +14,7 @@ class Maze:
         cell_size_x: int,
         cell_size_y: int,
         win: Window,
+        animation_delay=0.05,
     ):
         """
         Boot.dev: Create a class that holds all the cells in the maze in a 2-dimensional grid, a list of list.
@@ -26,6 +27,7 @@ class Maze:
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
         self.win = win
+        self.animation_delay = animation_delay
 
         self._cells: list[list[Cell]] = []
 
@@ -80,4 +82,4 @@ class Maze:
         The animate method is what allows us to visualize what the algorithms are doing in real time. It should simply call the window's `redraw()` method, then use time.sleep() for a short amount of time so you eyes keep up with each render frame. I slept for `0.05` seconds.
         """
         self.win.redraw()
-        sleep(0.05)
+        sleep(self.animation_delay)
