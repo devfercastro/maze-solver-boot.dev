@@ -33,6 +33,8 @@ class Maze:
 
         self._create_cells()
 
+        self._break_entrance_and_exit()
+
     def _create_cells(self):
         """
         Boot.dev: This method should fill a `self._cells` list with list of cells. Each top-level list is a column of `Cell` objects. Once the matrix is populated it should call its `_draw_cell()` method on each `Cell`.
@@ -83,3 +85,23 @@ class Maze:
         """
         self.win.redraw()
         sleep(self.animation_delay)
+
+    def _break_entrance_and_exit(self):
+        """
+        Boot.dev: The entrance to the maze will always be at the top of the top-left cell, the exit always at the bottom of the bottom-right cell.
+        Add a `_break_entrance_and_exit()` method that removes an outer wall from those cells, and calls `_draw_cell()` after each removal.
+        Next, write another unit test to ensure it's working.
+        """
+        last_cell_j = self.num_cols - 1
+        last_cell_i = self.num_rows - 1
+
+        # Get the corresponding cells
+        first_cell = self._cells[0][0]
+        last_cell = self._cells[last_cell_i][last_cell_j]
+
+        first_cell.walls[1] = False  # Set top first-cell's wall to false
+        last_cell.walls[3] = False  # Set bottom last-cell's wall to false
+
+        # Draw cells
+        self._draw_cell(0, 0)
+        self._draw_cell(last_cell_i, last_cell_j)

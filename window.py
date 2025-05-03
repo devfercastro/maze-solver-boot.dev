@@ -14,7 +14,9 @@ class Window:
         # 3. Set the `title` property of the root widget
         self.__root.title = "Maze Solver"
         # 4. Create a `Canvas` widget and save it as a data member
-        self.__canvas = Canvas(self.__root, width=width, height=height)
+        self.__canvas = Canvas(
+            self.__root, width=width, height=height, background="white"
+        )
         # 5. Pack the canvas widget so that it's ready to be drawn
         self.__canvas.pack()
         # 6. Create a data member to represent that the window is "running", and set it to `False`

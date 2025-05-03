@@ -19,7 +19,6 @@ class Point:
 
 class Line:
     def __init__(self, a: Point = Point(0, 2), b: Point = Point(100, 2)) -> None:
-        print(a, b)
         # Takes 2 points as input, and saves them as data members.
         self.a = a
         self.b = b
@@ -43,7 +42,7 @@ class Cell:
             raise Exception("Cell instance must have a declared 'Window' instance")
 
         # It should know which walls it has, know where it exists on the canvas in x/y coordinates and have access to the window so that it can draw itself
-        self.walls = (True, True, True, True)  # Order left, top, right, bottom
+        self.walls = [True, True, True, True]  # Order left, top, right, bottom
         self.coordinates = coordinates
         self._win = window
 
@@ -71,10 +70,16 @@ class Cell:
         ]
 
         for i, points in enumerate(wall_points):
+            current_line = Line(*points)
             # If the current wall is true, use their corresponding points to draw a trace a line
             if self.walls[i]:
-                current_line = Line(*points)
                 self._win.draw_line(current_line, "black")
+            # Boot.dev:
+            # L9: Breaking Down Walls in the maze
+            # You may have noticed that if you run your code, it doesn't appear to be removing the walls. That's because they were already drawn to the canvas, and removing the wall in memory doesn't update the canvas.
+            # My recommendation is to simply update the `draw()` method in your `Cell` class to draw a `"white"` or `"#d9d9d9"` line for walls that don't exist instead of doing nothing.
+            else:
+                self._win.draw_line(current_line, "white")
 
     def draw_move(self, to_cell: "Cell", undo=False):
         """
