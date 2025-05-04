@@ -11,8 +11,18 @@ def main():
 
     # draw a maze
     maze = Maze(
-        WIDTH // 2 - (5 * 50) // 2, HEIGHT // 2 - (5 * 50) // 2, 5, 5, 50, 50, win
+        WIDTH // 2 - (5 * 50) // 2,
+        HEIGHT // 2 - (5 * 50) // 2,
+        5,
+        5,
+        50,
+        50,
+        win,
+        0.05,
+        0,
     )
+
+    print(maze.solve())
 
     # wait for the window to close
     win.wait_for_close()

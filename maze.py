@@ -62,7 +62,7 @@ class Maze:
         for i in range(self.num_rows):
             for j in range(self.num_cols):
                 self._draw_cell(i, j)
-                self._animate()
+                self._animate(self.animation_delay)
 
     def _draw_cell(self, i: int, j: int):
         """
@@ -91,12 +91,12 @@ class Maze:
         # draw it
         cell.draw()
 
-    def _animate(self):
+    def _animate(self, animation_delay: float = None):
         """
         The animate method is what allows us to visualize what the algorithms are doing in real time. It should simply call the window's `redraw()` method, then use time.sleep() for a short amount of time so you eyes keep up with each render frame. I slept for `0.05` seconds.
         """
         self.win.redraw()
-        sleep(self.animation_delay)
+        sleep(animation_delay if animation_delay is not None else 0)
 
     def _break_entrance_and_exit(self):
         """
@@ -140,6 +140,7 @@ class Maze:
                 to_visit.append((i, j + 1))
             # 2.3. If there are zero directions you can go from the current cell, then draw the current cell and `return` to break out of the loop
             if not to_visit:
+                self._animate(self.animation_delay * 2)
                 self._draw_cell(i, j)
                 return
             # 2.4. Otherwise, pick a random direction
@@ -166,3 +167,65 @@ class Maze:
         for i in range(self.num_rows):
             for j in range(self.num_cols):
                 self._cells[i][j].visited = False
+
+    def solve(self) -> bool:
+        # L12: Solve the Maze
+        # The `solve()` method on the `Maze` class simply calls the `_solve_r` method starting at `i=0` and `j=0`. It should return `True` if the maze was solved, `False` otherwise. This is the same return value as `_solve_r`.
+        return self._solve_r(0, 0)
+
+    def _solve_r(self, i: int, j: int) -> bool:
+        # L12: Solve the Maze
+        # The `_solve_r` method returs `True` if the current cell is an end cell, OR if it leads to the end cell. It returns `False` if the current cell is a loser cell
+
+        current_cell = self._cells[i][j]
+        # 1. Call the `_animate` method
+        self._animate(self.animation_delay)
+        # 2. Mark the current cell as visited
+        current_cell.visited = True
+        # 3. If you are at the "end" cell return `True`
+        if current_cell == self._cells[-1][-1]:
+            return True
+        # 4. For each direction:
+        # 4.1. If theres is a cell in that direction, there is no wall blocking you, and that cell hasn't been visited:
+        if (
+            j > 0 and not current_cell.walls[0] and not self._cells[i][j - 1].visited
+        ):  # MOVING LEFT
+            # 4.1.1. Draw a move between the current cell and that cell
+            current_cell.draw_move(self._cells[i][j - 1])
+            # 4.1.2. Call `_solve_r` recursively to move to that cell. If that cell returns `True`, then just return `True` and don't worry about the other directions
+            if self._solve_r(i, j - 1):
+                return True
+            # 4.1.3. Otherwise, draw an "undo" move between the current cell and the next cell
+            else:
+                current_cell.draw_move(self._cells[i][j - 1], True)
+        if (
+            j < self.num_cols - 1
+            and not current_cell.walls[2]
+            and not self._cells[i][j + 1].visited
+        ):  # MOVING RIGHT
+            current_cell.draw_move(self._cells[i][j + 1])
+            if self._solve_r(i, j + 1):
+                return True
+            else:
+                current_cell.draw_move(self._cells[i][j + 1], True)
+        if (
+            i > 0 and not current_cell.walls[1] and not self._cells[i - 1][j].visited
+        ):  # MOVING TOP
+            current_cell.draw_move(self._cells[i - 1][j])
+            if self._solve_r(i - 1, j):
+                return True
+            else:
+                current_cell.draw_move(self._cells[i - 1][j], True)
+        if (
+            i < self.num_rows - 1
+            and not current_cell.walls[3]
+            and not self._cells[i + 1][j].visited
+        ):  # MOVING BOT
+            current_cell.draw_move(self._cells[i + 1][j])
+            if self._solve_r(i + 1, j):
+                return True
+            else:
+                current_cell.draw_move(self._cells[i + 1][j], True)
+
+        # 5. If none of the directions worked out, return `False`
+        return False

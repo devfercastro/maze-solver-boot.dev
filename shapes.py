@@ -28,7 +28,7 @@ class Line:
         Takes a canvas and a fill color as input. The color will just be a string like "black" or "red", then it will call the canva's `create_line()` method.
         """
         canvas.create_line(
-            self.a.x, self.a.y, self.b.x, self.b.y, fill=fill_color, width=2
+            self.a.x, self.a.y, self.b.x, self.b.y, fill=fill_color, width=5
         )
 
 
