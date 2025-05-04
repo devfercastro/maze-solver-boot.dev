@@ -44,6 +44,9 @@ class Maze:
 
         self._break_entrance_and_exit()
 
+        self._break_walls_r(0, 0)
+        self._reset_cells_visited()
+
     def _create_cells(self):
         """
         Boot.dev: This method should fill a `self._cells` list with list of cells. Each top-level list is a column of `Cell` objects. Once the matrix is populated it should call its `_draw_cell()` method on each `Cell`.
@@ -156,3 +159,10 @@ class Maze:
                 self._cells[i + 1][j].walls[1] = False  # And bottom neighbor's top wall
             # 2.6. Move to the chosen cell by recursively calling `_break_walls_r`
             self._break_walls_r(next_i, next_j)
+
+    def _reset_cells_visited(self):
+        # L11: Reset the Cell's 'visited' Property
+        # Write `_reset_cells_visited` method. It should reset the `visited` property of all the cells in the `Maze` to false. Call it after `_break_walls_r` so we can reuse the `visited` property when solving the maze in the next step.
+        for i in range(self.num_rows):
+            for j in range(self.num_cols):
+                self._cells[i][j].visited = False
