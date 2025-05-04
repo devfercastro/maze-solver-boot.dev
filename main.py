@@ -13,7 +13,6 @@ def main():
     maze = Maze(
         WIDTH // 2 - (5 * 50) // 2, HEIGHT // 2 - (5 * 50) // 2, 5, 5, 50, 50, win
     )
-    maze._break_walls_r(0, 0)  # just to test the method to make paths
 
     # wait for the window to close
     win.wait_for_close()
