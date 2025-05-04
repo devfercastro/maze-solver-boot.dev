@@ -1,3 +1,4 @@
+import random
 from time import sleep
 
 from shapes import Cell, Point
@@ -15,11 +16,19 @@ class Maze:
         cell_size_y: int,
         win: Window,
         animation_delay=0.05,
+        # L10: Break Walls
+        # Add another parameter to `Maze` caled `seed` that defaults to `None`
+        seed=None,
     ):
         """
         Boot.dev: Create a class that holds all the cells in the maze in a 2-dimensional grid, a list of list.
         Initialize data members for all inputs then call `_create_cells()`.
         """
+        # L10: Break Walls
+        # Then, in your constructor, if the `seed` isn't none you call `random.seed(seed)`
+        if seed:
+            random.seed(seed)
+
         self.x1 = x1
         self.y1 = y1
         self.num_rows = num_rows
@@ -52,7 +61,7 @@ class Maze:
                 self._draw_cell(i, j)
                 self._animate()
 
-    def _draw_cell(self, i, j):
+    def _draw_cell(self, i: int, j: int):
         """
         Boot.dev: This method should calculate the x/y position of the `Cell` based on `i`, `j`, the `cell_size`, and the x/y position of the Maze itself. The x/y position of the maze represents how many pixels from the top and left the maze should start from the side of the window.
         Once that's calculated, it should draw the cell and call the maze's `_animate()` method.
@@ -105,3 +114,45 @@ class Maze:
         # Draw cells
         self._draw_cell(0, 0)
         self._draw_cell(last_cell_i, last_cell_j)
+
+    def _break_walls_r(self, i: int, j: int):
+        """
+        L10: Break Walls
+        The recursive `_break_walls_r(self, i, j)` method is a depth-first traversal through the cells, breaking down walls as it goes. I'lle describe the algorithm I used, but feel free to write your own from scratch if your're up to it!
+        """
+        # 1. Mark the current cell as visited
+        self._cells[i][j].visited = True
+        # 2. In an infinite loop:
+        while True:
+            # 2.1. Create a new empty list to hold the `i` and `j` values you will need to visit
+            to_visit = []
+            # 2.2. Check the cells that are directly adjacent to the current cell. Keep track of any that have not been visited as "possible directions" to move to
+            if i > 0 and not self._cells[i - 1][j].visited:  # Top cell
+                to_visit.append((i - 1, j))
+            if i < self.num_rows - 1 and not self._cells[i + 1][j].visited:
+                to_visit.append((i + 1, j))
+            if j > 0 and not self._cells[i][j - 1].visited:
+                to_visit.append((i, j - 1))
+            if j < self.num_cols - 1 and not self._cells[i][j + 1].visited:
+                to_visit.append((i, j + 1))
+            # 2.3. If there are zero directions you can go from the current cell, then draw the current cell and `return` to break out of the loop
+            if not to_visit:
+                self._draw_cell(i, j)
+                return
+            # 2.4. Otherwise, pick a random direction
+            next_i, next_j = random.choice(to_visit)
+            # 2.5. Knock down the walls between the current cell and the chosen cell
+            if next_j == j - 1:  # Moving to left
+                self._cells[i][j].walls[0] = False  # Remove current cell's left wall
+                self._cells[i][j - 1].walls[2] = False  # And left neighbor's right wall
+            elif next_j == j + 1:  # Moving to right
+                self._cells[i][j].walls[2] = False  # Remove current cell's right wall
+                self._cells[i][j + 1].walls[0] = False  # And right neighbor's left wall
+            elif next_i == i - 1:  # Moving up
+                self._cells[i][j].walls[1] = False  # Remove current cell's top wall
+                self._cells[i - 1][j].walls[3] = False  # And top neighbor's bottom wall
+            elif next_i == i + 1:  # Moving down
+                self._cells[i][j].walls[3] = False  # Remove current cell's bottom wall
+                self._cells[i + 1][j].walls[1] = False  # And bottom neighbor's top wall
+            # 2.6. Move to the chosen cell by recursively calling `_break_walls_r`
+            self._break_walls_r(next_i, next_j)

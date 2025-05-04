@@ -37,6 +37,7 @@ class Cell:
         self,
         coordinates: tuple[Point, Point] = (Point(0, 0), Point(10, 10)),
         window: Window = None,
+        visited=False,
     ):
         if window is None:
             raise Exception("Cell instance must have a declared 'Window' instance")
@@ -45,6 +46,7 @@ class Cell:
         self.walls = [True, True, True, True]  # Order left, top, right, bottom
         self.coordinates = coordinates
         self._win = window
+        self.visited = visited
 
     def draw(self):
         # It takes the x/y coordinates of its top-left corner, and its bottom-right corner as input.
