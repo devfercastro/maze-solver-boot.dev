@@ -95,12 +95,12 @@ class Cell:
         color: Literal["black", "red"] = "black" if undo else "red"
 
         # Use the x/y coordinates of the 2 cells in question to decide how to draw the line connecting the two cells.
-        start_point = self.__calculate_center()
-        end_point = to_cell.__calculate_center()
+        start_point = self._calculate_center()
+        end_point = to_cell._calculate_center()
 
         self._win.draw_line(Line(start_point, end_point), color)
 
-    def __calculate_center(self):
+    def _calculate_center(self):
         """
         Calculates the center of a cell.
 
